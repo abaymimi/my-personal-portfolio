@@ -98,7 +98,7 @@ export function Timeline() {
               {/* Timeline dot - medium screens and up */}
               <div
                 className={`absolute top-6 ${
-                  index % 2 === 0 ? "md:-left-5" : "md:-right-6"
+                  index % 2 === 0 ? "md:-left-6" : "md:-right-6"
                 } left-8 md:left-auto transform -translate-x-1/2 md:translate-x-0 w-12 h-12 rounded-full bg-background border-4 border-primary flex items-center justify-center z-10 hidden md:flex`}
               >
                 {item.type === "work" ? (

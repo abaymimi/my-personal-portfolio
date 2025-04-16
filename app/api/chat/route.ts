@@ -1,6 +1,6 @@
 import { StreamingTextResponse } from "ai"
-import { openai } from "@ai-sdk/openai"
 import { generateText } from "ai"
+import { google } from "@ai-sdk/google"
 
 // Create a personal bio based on the resume with more detailed instructions
 const personalBio = `
@@ -179,8 +179,8 @@ export async function POST(req: Request) {
     const { messages } = await req.json()
     const userMessage = messages[messages.length - 1].content
 
-    // Try to use OpenAI if available
-    if (process.env.OPENAI_API_KEY && process.env.USE_OPENAI !== "false") {
+    // Try to use Gemini if available
+    if (process.env.GOOGLE_API_KEY && process.env.USE_AI !== "false") {
       try {
         // Create a system message with your personal bio and improved instructions
         const systemMessage = {
@@ -198,22 +198,22 @@ export async function POST(req: Request) {
         // Add the system message to the beginning of the messages array
         const messagesWithSystem = [systemMessage, ...messages]
 
-        // Generate a response using the AI SDK
+        // Generate a response using the AI SDK with Gemini
         const response = await generateText({
-          model: openai("gpt-4o"),
+          model: google("gemini-pro"),
           messages: messagesWithSystem,
           temperature: 0.7, // Add some personality but keep responses factual
         })
 
         // Return a streaming response
         return new StreamingTextResponse(response.toStream())
-      } catch (openaiError) {
-        console.error("OpenAI API error:", openaiError)
-        // Fall back to simple responses if OpenAI fails
+      } catch (aiError) {
+        console.error("Gemini API error:", aiError)
+        // Fall back to simple responses if Gemini fails
       }
     }
 
-    // Fallback to simple responses if OpenAI is not available or fails
+    // Fallback to simple responses if Gemini is not available or fails
     const simpleResponse = getSimpleResponse(userMessage)
 
     // Create a ReadableStream from the simple response to simulate streaming
