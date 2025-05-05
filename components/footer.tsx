@@ -1,5 +1,5 @@
-import Link from "next/link"
-import { Github, Linkedin, Twitter, Instagram } from "lucide-react"
+import Link from "next/link";
+import { Github, Linkedin, Twitter, Instagram } from "lucide-react";
 
 export function Footer() {
   return (
@@ -11,24 +11,36 @@ export function Footer() {
               Abebe Kayimo
             </Link>
             <p className="text-foreground/70 mt-2 max-w-md">
-              Senior Full Stack Developer and Team Lead with over 5 years of experience in delivering high-quality
-              projects.
+              Senior Full Stack Developer and Team Lead with over 8+ years of
+              experience in delivering high-quality projects.
             </p>
           </div>
           <div className="flex space-x-4">
-            <Link href="#" className="text-foreground/70 hover:text-primary transition-colors">
+            <Link
+              href="https://github.com/abaymimi"
+              className="text-foreground/70 hover:text-primary transition-colors"
+            >
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
             </Link>
-            <Link href="#" className="text-foreground/70 hover:text-primary transition-colors">
+            <Link
+              href="https://www.linkedin.com/in/abebe-kayimo/"
+              className="text-foreground/70 hover:text-primary transition-colors"
+            >
               <Linkedin className="h-5 w-5" />
               <span className="sr-only">LinkedIn</span>
             </Link>
-            <Link href="#" className="text-foreground/70 hover:text-primary transition-colors">
+            <Link
+              href="#"
+              className="text-foreground/70 hover:text-primary transition-colors"
+            >
               <Twitter className="h-5 w-5" />
               <span className="sr-only">Twitter</span>
             </Link>
-            <Link href="#" className="text-foreground/70 hover:text-primary transition-colors">
+            <Link
+              href="#"
+              className="text-foreground/70 hover:text-primary transition-colors"
+            >
               <Instagram className="h-5 w-5" />
               <span className="sr-only">Instagram</span>
             </Link>
@@ -39,5 +51,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

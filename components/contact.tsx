@@ -1,51 +1,53 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Mail, Phone, MapPin, Send, Linkedin } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Mail, Phone, MapPin, Send, Linkedin } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 export function Contact() {
-  const { toast } = useToast()
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     toast({
       title: "Message sent!",
       description: "Thank you for your message. I'll get back to you soon.",
-    })
+    });
 
     setFormData({
       name: "",
       email: "",
       subject: "",
       message: "",
-    })
-    setIsSubmitting(false)
-  }
+    });
+    setIsSubmitting(false);
+  };
 
   return (
     <section id="contact" className="py-20">
@@ -60,8 +62,9 @@ export function Contact() {
           <h2 className="text-3xl font-bold mb-4">Get In Touch</h2>
           <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
           <p className="text-foreground/80 max-w-2xl mx-auto">
-            Have a project in mind or want to discuss potential opportunities? Feel free to reach out to me using the
-            contact form or through my contact information.
+            Have a project in mind or want to discuss potential opportunities?
+            Feel free to reach out to me using the contact form or through my
+            contact information.
           </p>
         </motion.div>
 
@@ -81,7 +84,7 @@ export function Contact() {
                     <Mail className="h-5 w-5 text-primary mr-4 mt-1" />
                     <div>
                       <h4 className="font-medium">Email</h4>
-                      <p className="text-foreground/80">abebe.kayimo@example.com</p>
+                      <p className="text-foreground/80">abebekayew@gmail.com</p>
                     </div>
                   </div>
                   <div className="flex items-start">
@@ -103,7 +106,10 @@ export function Contact() {
                     <div>
                       <h4 className="font-medium">LinkedIn</h4>
                       <p className="text-foreground/80">
-                        <a href="#" className="hover:text-primary transition-colors">
+                        <a
+                          href="#"
+                          className="hover:text-primary transition-colors"
+                        >
                           Abebe Kayimo
                         </a>
                       </p>
@@ -181,7 +187,11 @@ export function Contact() {
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
                     {isSubmitting ? (
                       <>Sending...</>
                     ) : (
@@ -198,5 +208,5 @@ export function Contact() {
         </div>
       </div>
     </section>
-  )
+  );
 }

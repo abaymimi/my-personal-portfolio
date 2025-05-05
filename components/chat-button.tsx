@@ -90,66 +90,70 @@ export function ChatButton() {
             }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.2 }}
-            className={`fixed bg-background border border-border shadow-xl z-50 flex flex-col overflow-hidden ${
-              isExpanded ? "inset-0" : ""
-            }`}
+            className="fixed bg-background border border-border shadow-xl z-50 overflow-hidden"
           >
-            <div className="p-4 border-b border-border flex justify-between items-center">
-              <h3 className="font-bold">Chat with Me</h3>
-              <div className="flex items-center space-x-2">
-                {!isMinimized && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setUseAI(!useAI)}
-                      className="text-xs"
-                    >
-                      {useAI ? "Using Gemini" : "Using Fallback"}
-                    </Button>
+            <div className="h-full w-full flex flex-col">
+              <div className="p-4 border-b border-border flex justify-between items-center">
+                <h3 className="font-bold">Chat with Me</h3>
+                <div className="flex items-center space-x-2">
+                  {!isMinimized && (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setUseAI(!useAI)}
+                        className="text-xs"
+                      >
+                        {useAI ? "Using Gemini" : "Using Fallback"}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={toggleExpand}
+                        aria-label={
+                          isExpanded ? "Exit full screen" : "Full screen"
+                        }
+                      >
+                        {isExpanded ? (
+                          <Minimize className="h-4 w-4" />
+                        ) : (
+                          <Expand className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </>
+                  )}
+                  {!isExpanded && (
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={toggleExpand}
+                      onClick={toggleMinimize}
                       aria-label={
-                        isExpanded ? "Exit full screen" : "Full screen"
+                        isMinimized ? "Maximize chat" : "Minimize chat"
                       }
                     >
-                      {isExpanded ? (
-                        <Minimize className="h-4 w-4" />
+                      {isMinimized ? (
+                        <Maximize2 className="h-4 w-4" />
                       ) : (
-                        <Expand className="h-4 w-4" />
+                        <Minimize2 className="h-4 w-4" />
                       )}
                     </Button>
-                  </>
-                )}
-                {!isExpanded && (
+                  )}
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={toggleMinimize}
-                    aria-label={isMinimized ? "Maximize chat" : "Minimize chat"}
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Close chat"
                   >
-                    {isMinimized ? (
-                      <Maximize2 className="h-4 w-4" />
-                    ) : (
-                      <Minimize2 className="h-4 w-4" />
-                    )}
+                    <X className="h-4 w-4" />
                   </Button>
-                )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(false)}
-                  aria-label="Close chat"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                </div>
               </div>
+              {!isMinimized && (
+                <div className="relative flex-1 h-[calc(100%-64px)]">
+                  <ChatInterface useAI={useAI} isExpanded={isExpanded} />
+                </div>
+              )}
             </div>
-            {!isMinimized && (
-              <ChatInterface useAI={useAI} isExpanded={isExpanded} />
-            )}
           </motion.div>
         )}
       </AnimatePresence>

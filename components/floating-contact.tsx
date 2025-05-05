@@ -26,7 +26,7 @@ export function FloatingContact() {
                 className="flex items-center gap-2 text-foreground/80 hover:text-primary transition-colors"
               >
                 <Mail className="h-4 w-4" />
-                <span>abebe.kayimo@example.com</span>
+                <span>abebekayew@gmail.com</span>
               </a>
               <a
                 href="tel:+251939416681"

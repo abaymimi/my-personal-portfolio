@@ -1,5 +1,8 @@
 "use client";
 
+import type React from "react";
+import ReactMarkdown from "react-markdown";
+
 import { useChat } from "ai/react";
 import { useRef, useEffect, useState } from "react";
 import { Send, RefreshCw, ThumbsUp, ThumbsDown } from "lucide-react";
@@ -49,8 +52,10 @@ export function ChatInterface({
 
   // Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isLoading]);
 
   // Reset error state when input changes
   useEffect(() => {
@@ -73,13 +78,23 @@ export function ChatInterface({
     }));
   };
 
+  // Custom submit handler
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSubmit(e);
+
+    // Force scroll to bottom after a small delay
+    setTimeout(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
+
   return (
-    <div className="flex flex-col h-full">
-      <div
-        className={`flex-1 overflow-y-auto p-4 space-y-4 ${
-          isExpanded ? "pb-20" : ""
-        }`}
-      >
+    <div className="relative flex flex-col h-full w-full">
+      {/* Messages container with absolute positioning and bottom padding for input area */}
+      <div className="absolute top-0 left-0 right-0 bottom-[76px] overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="text-center text-foreground/70 my-8">
             <p>👋 Hi there! Ask me anything about Abebe.</p>
@@ -120,7 +135,7 @@ export function ChatInterface({
                   ) : (
                     <>
                       <AvatarFallback>AI</AvatarFallback>
-                      <AvatarImage src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z'/%3E%3C/svg%3E" />
+                      {/* <AvatarImage src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z'/%3E%3C/svg%3E" /> */}
                     </>
                   )}
                 </Avatar>
@@ -132,7 +147,58 @@ export function ChatInterface({
                         : "bg-muted text-foreground"
                     }`}
                   >
-                    {message.content}
+                    {message.role === "user" ? (
+                      message.content
+                    ) : (
+                      <ReactMarkdown
+                        components={{
+                          h1: ({ node, ...props }) => (
+                            <h1
+                              className="text-2xl font-bold my-4"
+                              {...props}
+                            />
+                          ),
+                          h2: ({ node, ...props }) => (
+                            <h2 className="text-xl font-bold my-3" {...props} />
+                          ),
+                          h3: ({ node, ...props }) => (
+                            <h3 className="text-lg font-bold my-2" {...props} />
+                          ),
+                          ul: ({ node, ...props }) => (
+                            <ul className="list-disc pl-6 my-2" {...props} />
+                          ),
+                          ol: ({ node, ...props }) => (
+                            <ol className="list-decimal pl-6 my-2" {...props} />
+                          ),
+                          li: ({ node, ...props }) => (
+                            <li className="my-1" {...props} />
+                          ),
+                          p: ({ node, ...props }) => (
+                            <p className="my-2" {...props} />
+                          ),
+                          code: ({ node, inline, ...props }) =>
+                            inline ? (
+                              <code
+                                className="bg-muted-foreground/20 rounded px-1 py-0.5"
+                                {...props}
+                              />
+                            ) : (
+                              <code
+                                className="block bg-muted-foreground/20 rounded p-2 my-2 overflow-x-auto"
+                                {...props}
+                              />
+                            ),
+                          blockquote: ({ node, ...props }) => (
+                            <blockquote
+                              className="border-l-4 border-primary pl-4 italic my-2"
+                              {...props}
+                            />
+                          ),
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    )}
                   </div>
 
                   {/* Feedback buttons for AI messages */}
@@ -208,10 +274,10 @@ export function ChatInterface({
           <div className="flex justify-start">
             <div className="flex items-start gap-2 max-w-[80%]">
               <Avatar className="h-8 w-8">
-                <AvatarFallback>AI</AvatarFallback>
-                <AvatarImage src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z'/%3E%3C/svg%3E" />
+                {/* <AvatarFallback>AI</AvatarFallback> */}
+                {/* <AvatarImage src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z'/%3E%3C/svg%3E" /> */}
               </Avatar>
-              <div className="rounded-lg px-4 py-2 bg-muted text-foreground">
+              {/* <div className="rounded-lg px-4 py-2 bg-muted text-foreground">
                 <div className="flex items-center space-x-1">
                   <div
                     className="w-2 h-2 rounded-full bg-primary animate-bounce"
@@ -226,7 +292,7 @@ export function ChatInterface({
                     style={{ animationDelay: "600ms" }}
                   ></div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         )}
@@ -247,29 +313,27 @@ export function ChatInterface({
         <div ref={messagesEndRef} />
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className={`p-4 border-t border-border ${
-          isExpanded ? "fixed bottom-0 left-0 right-0 bg-background" : ""
-        }`}
-      >
-        <div className="flex gap-2 max-w-screen-sm mx-auto">
-          <Input
-            value={input}
-            onChange={handleInputChange}
-            placeholder="Ask me anything..."
-            className="flex-1"
-            disabled={isLoading}
-          />
-          <Button
-            type="submit"
-            size="icon"
-            disabled={isLoading || !input.trim()}
-          >
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
-      </form>
+      {/* Input form - absolutely positioned at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-background">
+        <form onSubmit={onSubmit} className="p-4">
+          <div className="flex gap-2 max-w-screen-sm mx-auto">
+            <Input
+              value={input}
+              onChange={handleInputChange}
+              placeholder="Ask me anything..."
+              className="flex-1"
+              disabled={isLoading}
+            />
+            <Button
+              type="submit"
+              size="icon"
+              disabled={isLoading || !input.trim()}
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

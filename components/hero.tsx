@@ -1,19 +1,21 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { ArrowDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion";
+import { ArrowDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ParticleBackground } from "./particle-background";
 
 export function Hero() {
   const scrollToAbout = () => {
-    const element = document.getElementById("about")
+    const element = document.getElementById("about");
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      element.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <ParticleBackground />
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
       </div>
@@ -29,7 +31,8 @@ export function Hero() {
             Hi, I'm <span className="text-primary">Abebe Kayimo</span>
           </h1>
           <p className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-2xl mx-auto">
-            Senior Full Stack Developer and Team Lead with over 5 years of experience
+            Senior Full Stack Developer and Team Lead with over 8+ years of
+            experience
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" onClick={scrollToAbout}>
@@ -43,10 +46,15 @@ export function Hero() {
       </div>
 
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <Button variant="ghost" size="icon" onClick={scrollToAbout} aria-label="Scroll Down">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={scrollToAbout}
+          aria-label="Scroll Down"
+        >
           <ArrowDown className="h-6 w-6" />
         </Button>
       </div>
     </section>
-  )
+  );
 }
